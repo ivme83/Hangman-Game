@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hangman</title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- My CSS -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css"> 
+    </head>
+
+    <body>
+        <div class="jumbotron">
+            <h1>Hangman</h1>
+        </div>
+
+        <div class="container main-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <h2 id="blanks"></h2>
+                        </div>
+                    </div>    
+                </div>
+            </div> <!-- first row -->
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body text-center">
+                            <h3 id="lives"></h3>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 id="gameState"></h3>
+                        </div>
+                    </div> 
+                </div>
+            </div> <!-- second row -->
+            
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 id="guessWin"></h3>
+                        </div>
+                    </div> 
+                </div>
+            </div> <!-- third row -->
+        </div>
+
+            <!-- Latest compiled and minified JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+            <!-- My Javascript -->
+            <script src="assets/javascript/game.js"></script>
+    </body>
+</html>
