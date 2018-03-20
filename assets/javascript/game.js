@@ -1,9 +1,12 @@
 var puzzleWords = ["happy","tree","mouse","cup","phone","computer"];
+var gameState = ["playing","You Win", "You Lose"];
 var i = 0;
 var currentWord = puzzleWords[Math.floor(Math.random() * puzzleWords.length)];
 var solution = [""];
 var playerGuesses = [""];
 var guessesLeft = 10;
+
+document.getElementById("game-state").innerHTML = gameState[0];
 
 solution.length = 0;
 for (i=0; i < currentWord.length; i++) {
@@ -58,6 +61,9 @@ document.onkeyup = function(event) {
 
     }
 
+    if (guessesLeft < 1) {
+        document.getElementById("game-state").innerHTML = gameState[2];
+    }
     
-  
+
 }
