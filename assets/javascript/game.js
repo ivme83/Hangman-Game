@@ -1,152 +1,152 @@
-// initialize all the variables
-var puzzleWords = [""];
-var gameState = [""];
-var i = 0;
-var currentWord = "";
-var solution = [""];
-var playerGuesses = [""];
-var guessesLeft = 0;
+var game = {
+    // Initialize variables here
+    userGuess: "",
+    puzzleWords: [""],
+    gameState: [""],
+    currentWord: "hello",
+    guessesLeft: 0,
+    livesID: "",
+    solutionID: "",
+    stateID: "",
+    solution: [""],
+    guesID: [""],
+    playerGuesses: [""],
 
-// this function sets up all the variables with their starting values
-initiateGame();
+    // Insert Methods here
+    initializeGame: function() {
+        
+        this.puzzleWords = ["happy","tree","mouse","cup","phone","computer"];
+        this.gameState = ["playing","You Win", "You Lose"];
+        this.currentWord = this.puzzleWords[Math.floor(Math.random() * this.puzzleWords.length)];
+        this.guessesLeft = 11;
+        this.livesID = "lives";
+        this.solutionID = "blanks";
+        this.stateID = "game-state";
+        this.guessID = "guessWin";
+        
+        this.updateLives();
+        this.updateSolution();
+        this.updateGameState();
+    },
 
-// main gain loop that is listening for a key press
-document.onkeyup = function(event) {
+    gameButton: function() {
+        this.resetGame();
+    },
 
-    // Determines which key was pressed.
-    var userGuess = event.key;
+    resetGame: function() {
+        this.currentWord = this.puzzleWords[Math.floor(Math.random() * this.puzzleWords.length)];
+        this.guessesLeft = 11;
+        this.updateLives();
+        this.solution.length = 0;
+        this.playerGuesses.length = 0;
+        this.updateSolution();
+        this.updateGameState();
+        document.getElementById(this.guessID).innerHTML = "";
+    },
 
-        // allLetter is a function that checks if the input was a letter and no other key press
-        // will only run the following code if the player pressed a valid key
-        if(allLetter(userGuess)) {
+    updateLives: function() {
+        if (this.guessesLeft > 0) {
+            this.guessesLeft--;
+            document.getElementById(this.livesID).innerHTML = "";
+            document.getElementById(this.livesID).innerHTML = this.guessesLeft;
+        }
+    },
+     
+
+    updateSolution: function() {
+        
+        // clears out the array
+        this.solution.length = 0;
+        
+        // This updates the display solution with either _ or any correctly guessed letters
+        // at the start of the game it will only print _ for each letter of the word
+        for (var i = 0; i < this.currentWord.length; i++) {
+            if (this.playerGuesses.indexOf(this.currentWord.charAt(i)) === -1) {
+                this.solution.push(" _ ");
+            } else {
+                this.solution.push(" " + this.currentWord.charAt(i) + " ");
+            }
+        }   
+        
+        // Clears the screen to prepare for reprinting
+        document.getElementById(this.solutionID).innerHTML = "";
+        
+        //  loops through the solution array to print out the current state of the solution
+        for (i=0; i < this.solution.length; i++) {
+            document.getElementById(this.solutionID).innerHTML += this.solution[i];
+        }
+    },
+
+    updateGameState: function() {
+        if (this.solution.indexOf(" _ ") === -1) {
+            document.getElementById(this.stateID).innerHTML = this.gameState[1];
+            this.guessesLeft = 0;
+        } else if (this.guessesLeft < 1) {
+            document.getElementById(this.stateID).innerHTML = this.gameState[2];
+        } else if (this.guessesLeft > 0 && this.guessesLeft < 11) {
+            document.getElementById(this.stateID).innerHTML = this.gameState[0];
+        }
+    },
+
+    getPress: function (newPr) {
+
+        // Validate input
+        if(this.allLetter(newPr)) {
+            this.userGuess = newPr;
+            this.mainGameLogic();
+        }
+    },
+
+    allLetter: function(inputtxt) {
+        var input = inputtxt;
+
+        var letters = /^[A-Za-z]+$/;
+    
+        if (input.match(letters)) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    mainGameLogic: function() {
+        if (this.playerGuesses.indexOf(this.userGuess) === -1 && this.guessesLeft > 0) {
+
+            // if the player hasn't guessed this letter yet, it is added to the array of guesses
+            this.playerGuesses.push(this.userGuess);
             
-            // checks if the player has already guessed this letter and if they have guesses left
-            if (playerGuesses.indexOf(userGuess) === -1 && guessesLeft > 0) {
+            // Clears the html element that displays all of the players guesses
+            document.getElementById(this.guessID).innerHTML = "";
+            
+            // this for loop iterates through the playerGuesses array and prints all of the
+            // current guesses
+            for (i = 0; i < this.playerGuesses.length; i++){
+                document.getElementById(this.guessID).innerHTML += this.playerGuesses[i] + " | "; 
+            }
+           
+            // checks to see if the word includes the letter that is currently being guessed
+           if (this.currentWord.includes(this.userGuess)) {
 
-                // if the player hasn't guessed this letter yet, it is added to the array of guesses
-                playerGuesses.push(userGuess);
+                // calls this function if the letter is in the word
+                this.updateSolution();
+    
+            } else {
                 
-                // Clears the html element that displays all of the players guesses
-                document.getElementById("guessWin").innerHTML = "";
+                // calls this function if the letter is not in the word
+                this.updateLives();
                 
-                // this for loop iterates through the playerGuesses array and prints all of the
-                // current guesses
-                for (i = 0; i < playerGuesses.length; i++){
-                    document.getElementById("guessWin").innerHTML += f[i] + " | "; 
-                }
-               
-                // checks to see if the word includes the letter that is currently being guessed
-               if (currentWord.includes(userGuess)) {
-
-                    // calls this function if the letter is in the word
-                    updateSolution();
-        
-                } else {
-                    
-                    // calls this function if the letter is not in the word
-                    updateLives();
-                    
-                }
-        
             }
         }
+        this.updateGameState();      
+    }
+}
 
-    // this function updates the Game State (can be playing, You Lose, or You Win)
-    updateGameState();
+game.initializeGame();
+
+document.onkeyup = function(event) {
+    // Determines which key was pressed.
+    var newPress = event.key;
     
-}
+   game.getPress(newPress);
 
-// This function is called when the Reset button is pressed
-function gameButton() {
-    resetGame();
-}
-
-
-// This function gives the variables all of their initial values
-function initiateGame() {
-    puzzleWords = ["happy","tree","mouse","cup","phone","computer"];
-    gameState = ["playing","You Win", "You Lose"];
-    // Randomly chooses a new word
-    currentWord = puzzleWords[Math.floor(Math.random() * puzzleWords.length)];
-    guessesLeft = 11;
-    //document.getElementById("lives").innerHTML = guessesLeft;
-    // these three update the screen for the lives,the blank word, and the current game state
-    updateLives();
-    updateSolution();
-    updateGameState();
-}
-
-// this function is called when the Reset button is pressed and restarts the game
-// and game variables and clears out the arrays
-function resetGame() {
-    currentWord = puzzleWords[Math.floor(Math.random() * puzzleWords.length)];
-    guessesLeft = 11;
-    updateLives();
-    solution.length = 0;
-    playerGuesses.length = 0;
-    updateSolution();
-    updateGameState();
-    document.getElementById("guessWin").innerHTML = "";
-}
-
-// This is a function that chceks if the passed through argument only contains
-// the letters a-z (upper or lower case) and returns true or false
-function allLetter(inputtxt) {
-    var input = inputtxt;
-
-    var letters = /^[A-Za-z]+$/;
-
-    if (input.match(letters)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// Changes lives only if there are any left and prints to the screen
-function updateLives() {
-    if (guessesLeft > 0) {
-        guessesLeft--;
-        document.getElementById("lives").innerHTML = "";
-        document.getElementById("lives").innerHTML = guessesLeft;
-    }
-}
-
-// This function does a lot with the displayed solution
-function updateSolution() {
-
-    // clears out the array
-    solution.length = 0;
-
-    // This updates the display solution with either _ or any correctly guessed letters
-    // at the start of the game it will only print _ for each letter of the word
-    for (i = 0; i < currentWord.length; i++) {
-        if (playerGuesses.indexOf(currentWord.charAt(i)) === -1) {
-            solution.push(" _ ");
-        } else {
-            solution.push(" " + currentWord.charAt(i) + " ");
-        }
-    }
-
-    // Clears the screen to prepare for reprinting
-    document.getElementById("blanks").innerHTML = "";
-
-    //  loops through the solution array to print out the current state of the solution
-    for (i=0; i < solution.length; i++) {
-        document.getElementById("blanks").innerHTML += solution[i];
-    }
-}
-
-// updates game state so that the player can see if they are still playing,
-// they have won, or if they have lost
-function updateGameState() {
-
-    if (solution.indexOf(" _ ") === -1) {
-        document.getElementById("game-state").innerHTML = gameState[1];
-        guessesLeft = 0;
-    } else if (guessesLeft < 1) {
-        document.getElementById("game-state").innerHTML = gameState[2];
-    } else if (guessesLeft > 0 && guessesLeft < 11) {
-        document.getElementById("game-state").innerHTML = gameState[0];
-    }
 }
