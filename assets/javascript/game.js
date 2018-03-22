@@ -164,6 +164,7 @@ var game = {
 // Initialize game
 game.initializeGame();
 
+// Game loop and key listener
 document.onkeyup = function(event) {
     // Determines which key was pressed.
     var newPress = event.key;
