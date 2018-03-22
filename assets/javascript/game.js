@@ -1,5 +1,5 @@
 var game = {
-    // Initialize variables here
+    // Initialized blank variables here
     userGuess: "",
     puzzleWords: [""],
     gameState: [""],
@@ -12,27 +12,36 @@ var game = {
     guesID: [""],
     playerGuesses: [""],
 
-    // Insert Methods here
+    // this code initalizes the game variables and runs the methods to get the game
+    // screen ready
     initializeGame: function() {
-        
+        // These are the possible words to guess
         this.puzzleWords = ["happy","tree","mouse","cup","phone","computer"];
+        // possible game states
         this.gameState = ["playing","You Win", "You Lose"];
+        // randomly choose word to guess
         this.currentWord = this.puzzleWords[Math.floor(Math.random() * this.puzzleWords.length)];
+        // set number of lives (+1 because updateLives() will subtract 1 before printing)
         this.guessesLeft = 11;
+        // set the id's for the html elements in the main html document
         this.livesID = "lives";
         this.solutionID = "blanks";
         this.stateID = "game-state";
         this.guessID = "guessWin";
         
+        // updates the screen for Lives, Game State, and the Solution space
         this.updateLives();
         this.updateSolution();
         this.updateGameState();
     },
 
+    // Function for the game button
     gameButton: function() {
+        // currently calls the resetGame() function
         this.resetGame();
     },
 
+    // resets all the variables and screen items to start a new game
     resetGame: function() {
         this.currentWord = this.puzzleWords[Math.floor(Math.random() * this.puzzleWords.length)];
         this.guessesLeft = 11;
@@ -44,6 +53,7 @@ var game = {
         document.getElementById(this.guessID).innerHTML = "";
     },
 
+    // Takes away a life and updates the screen
     updateLives: function() {
         if (this.guessesLeft > 0) {
             this.guessesLeft--;
@@ -52,7 +62,7 @@ var game = {
         }
     },
      
-
+    // Updates the solution on the screen
     updateSolution: function() {
         
         // clears out the array
@@ -77,26 +87,32 @@ var game = {
         }
     },
 
+    // Updates the game state to playing, You Win, or You Lose
     updateGameState: function() {
         if (this.solution.indexOf(" _ ") === -1) {
+            // You Win
             document.getElementById(this.stateID).innerHTML = this.gameState[1];
             this.guessesLeft = 0;
         } else if (this.guessesLeft < 1) {
+            // You Lose
             document.getElementById(this.stateID).innerHTML = this.gameState[2];
         } else if (this.guessesLeft > 0 && this.guessesLeft < 11) {
+            // still playing
             document.getElementById(this.stateID).innerHTML = this.gameState[0];
         }
     },
 
+    // Get the key press through argument and check if it is a letter
     getPress: function (newPr) {
 
-        // Validate input
+        // Validate input and then starts the main logic of the game
         if(this.allLetter(newPr)) {
             this.userGuess = newPr;
             this.mainGameLogic();
         }
     },
 
+    // Checks if the input is a letter
     allLetter: function(inputtxt) {
         var input = inputtxt;
 
@@ -109,7 +125,10 @@ var game = {
         }
     },
 
+    // Main logic of the game
     mainGameLogic: function() {
+        // Checks if the new guess has already been guessed and if there are
+        // guesses left
         if (this.playerGuesses.indexOf(this.userGuess) === -1 && this.guessesLeft > 0) {
 
             // if the player hasn't guessed this letter yet, it is added to the array of guesses
@@ -137,16 +156,19 @@ var game = {
                 
             }
         }
+        //Update Game State
         this.updateGameState();      
     }
 }
 
+// Initialize game
 game.initializeGame();
 
 document.onkeyup = function(event) {
     // Determines which key was pressed.
     var newPress = event.key;
     
-   game.getPress(newPress);
+    // starts game
+    game.getPress(newPress);
 
 }
